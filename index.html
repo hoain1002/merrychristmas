@@ -3,69 +3,99 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Cosmic Christmas – ULTRA MAX</title>
+<title>Cosmic Christmas</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Allura&display=swap" rel="stylesheet">
 
 <style>
 html,body{
-  margin:0;padding:0;width:100%;height:100%;
-  background:#000;overflow:hidden;
-  font-family:'Montserrat',sans-serif;
+  margin:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  overflow:hidden;
   touch-action:none;
 }
 canvas{position:fixed;inset:0}
+
 #gift{
-  position:absolute;bottom:6%;left:50%;
+  position:absolute;
+  bottom:6%;
+  left:50%;
   transform:translateX(-50%);
-  width:140px;height:140px;z-index:10;
+  width:130px;
+  height:130px;
+  z-index:5;
   animation:float 4s ease-in-out infinite;
 }
 @keyframes float{
   0%,100%{transform:translate(-50%,0)}
-  50%{transform:translate(-50%,-20px)}
+  50%{transform:translate(-50%,-18px)}
 }
 .gift{
-  width:100%;height:100%;border-radius:22px;
-  background:linear-gradient(135deg,#ff0066,#ff9aa2);
+  width:100%;
+  height:100%;
+  border-radius:22px;
+  background:linear-gradient(135deg,#ff005d,#ff9aa2);
   box-shadow:0 0 40px rgba(255,0,120,.9),
              0 0 120px rgba(255,0,150,.8);
 }
-.gift:before,.gift:after{
-  content:'';position:absolute;background:#ffd166;
+.gift::before,.gift::after{
+  content:'';
+  position:absolute;
+  background:#ffd166;
 }
-.gift:before{width:100%;height:16px;top:62px}
-.gift:after{width:16px;height:100%;left:62px}
+.gift::before{width:100%;height:14px;top:58px}
+.gift::after{width:14px;height:100%;left:58px}
 
 #card{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.88);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;
-  transition:2s ease;z-index:20;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:1.8s ease;
+  z-index:10;
 }
 #card.show{opacity:1;pointer-events:auto}
+
 .card{
-  width:min(92%,640px);
-  padding:60px;border-radius:36px;
+  width:min(92%,620px);
+  padding:60px;
+  border-radius:36px;
   background:rgba(255,255,255,.08);
-  backdrop-filter:blur(28px);
-  box-shadow:0 0 160px rgba(0,220,255,.7),
-             inset 0 0 80px rgba(255,255,255,.15);
-  color:white;text-align:center;
+  backdrop-filter:blur(26px);
+  box-shadow:0 0 120px rgba(150,220,255,.6);
+  text-align:center;
+  color:#fff;
 }
+
 .card h1{
   font-family:'Great Vibes',cursive;
-  font-size:70px;margin:0 0 20px;
-  text-shadow:0 0 40px #9ff,0 0 90px #9ff;
+  font-size:68px;
+  margin-bottom:12px;
+  text-shadow:0 0 40px #9ff;
 }
-.card h2{font-weight:300;margin-bottom:30px}
+
+.card h2{
+  font-family:'Allura',cursive;
+  font-size:34px;
+  margin-bottom:30px;
+}
+
 #text{
-  white-space:pre-line;line-height:1.9;
-  text-shadow:0 0 12px rgba(255,255,255,.9),
-              0 0 50px rgba(120,220,255,.8);
+  font-family:'Allura',cursive;
+  font-size:26px;
+  line-height:2.4;
+  letter-spacing:.6px;
+  white-space:pre-line;
+  text-shadow:
+    0 0 8px rgba(255,255,255,.9),
+    0 0 30px rgba(120,220,255,.5);
 }
-audio{display:none}
 </style>
 </head>
 
@@ -100,149 +130,82 @@ function resize(){
 }
 resize();addEventListener("resize",resize);
 
-/* ===== CAMERA ===== */
-let rot=0,targetRot=0,vel=0;
-
-/* ===== TOUCH ===== */
-let down=false,lastX=0;
-function start(x){down=true;lastX=x}
-function move(x){
-  if(!down)return;
-  const d=(x-lastX)*0.004;
-  vel=d*0.9;
-  targetRot+=d;
-  lastX=x;
-}
-function end(){down=false}
-fx.addEventListener("mousedown",e=>start(e.clientX));
-fx.addEventListener("mousemove",e=>move(e.clientX));
-fx.addEventListener("mouseup",end);
-fx.addEventListener("touchstart",e=>start(e.touches[0].clientX));
-fx.addEventListener("touchmove",e=>move(e.touches[0].clientX));
-fx.addEventListener("touchend",end);
-
 /* ===== STARS ===== */
 const stars=[];
-for(let i=0;i<1600;i++){
+for(let i=0;i<1200;i++){
   stars.push({
-    x:(Math.random()-.5)*4000,
-    y:(Math.random()-.5)*4000,
-    z:Math.random()*4000
+    x:(Math.random()-.5)*3000,
+    y:(Math.random()-.5)*3000,
+    z:Math.random()*3000
   });
 }
 
-/* ===== NEBULA ===== */
-const nebula=[];
-for(let i=0;i<60;i++){
-  nebula.push({
-    x:(Math.random()-.5)*2000,
-    y:(Math.random()-.5)*2000,
-    r:300+Math.random()*600,
-    h:Math.random()*360
-  });
-}
-
-/* ===== SANTA ===== */
-let santaX=-600;
-function drawSanta(){
-  const y=bg.height*0.25+Math.sin(Date.now()/800)*20;
-  ctx.save();
-  ctx.translate(santaX,y);
-  ctx.scale(1.2,1.2);
-  ctx.fillStyle="rgba(255,0,0,.9)";
-  ctx.fillRect(0,0,80,30);
-  ctx.fillStyle="#fff";
-  ctx.fillRect(10,-10,30,20);
-  ctx.restore();
-  santaX+=2.4;
-  if(santaX>bg.width+600)santaX=-600;
-}
-
-/* ===== DRAW SPACE ===== */
-function drawGalaxy(){
-  ctx.fillStyle="rgba(0,0,30,.35)";
-  ctx.fillRect(0,0,bg.width,bg.height);
-  ctx.save();
-  ctx.translate(bg.width/2,bg.height/2);
-
-  nebula.forEach(n=>{
-    const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);
-    g.addColorStop(0,`hsla(${n.h},100%,60%,.18)`);
-    g.addColorStop(1,"transparent");
-    ctx.fillStyle=g;
-    ctx.beginPath();
-    ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
-    ctx.fill();
-    n.h+=0.03;
-  });
-
-  stars.forEach(s=>{
-    s.z-=6;if(s.z<1)s.z=4000;
-    const k=1000/s.z;
-    ctx.fillStyle=`rgba(200,220,255,${1-s.z/4000})`;
-    ctx.fillRect(s.x*k,s.y*k,2*k,2*k);
-  });
-  ctx.restore();
-  drawSanta();
-}
-<script>
 /* ===== TREE ===== */
 let grow=0;
 const tree=[];
-for(let i=0;i<800;i++){
+for(let i=0;i<700;i++){
   tree.push({
-    a:i*0.27,
-    h:i*1.1,
-    r:(1-i/800)*240
+    a:i*0.35,
+    h:i*1.05,
+    r:(1-i/700)*220
   });
+}
+
+/* ===== SNOW ===== */
+const snow=[];
+for(let i=0;i<300;i++){
+  snow.push({
+    x:Math.random()*fx.width,
+    y:Math.random()*fx.height,
+    s:Math.random()*1.5+.5
+  });
+}
+
+function drawGalaxy(){
+  ctx.fillStyle="rgba(0,0,25,.4)";
+  ctx.fillRect(0,0,bg.width,bg.height);
+  ctx.save();
+  ctx.translate(bg.width/2,bg.height/2);
+  stars.forEach(s=>{
+    s.z-=4;
+    if(s.z<1)s.z=3000;
+    const k=900/s.z;
+    ctx.fillStyle="rgba(200,220,255,.8)";
+    ctx.fillRect(s.x*k,s.y*k,2*k,2*k);
+  });
+  ctx.restore();
 }
 
 function drawTree(){
   fctx.save();
   fctx.translate(fx.width/2,fx.height*0.8);
   fctx.globalCompositeOperation="lighter";
-  vel*=0.95;
-  targetRot+=vel;
-  rot+=(targetRot-rot)*0.1;
-
   for(let i=0;i<grow;i++){
     const p=tree[i];
-    const a=p.a+rot;
-    const x=Math.cos(a)*p.r;
-    const z=Math.sin(a)*p.r;
+    const x=Math.cos(p.a)*p.r;
+    const z=Math.sin(p.a)*p.r;
     const y=-p.h;
-    const s=1000/(1000+z);
-    fctx.fillStyle=`hsla(${i*1.5},100%,60%,.9)`;
+    const s=900/(900+z);
+    fctx.fillStyle=`hsla(${i*2},100%,60%,.9)`;
     fctx.beginPath();
-    fctx.arc(x*s,y*s,2.8*s,0,Math.PI*2);
+    fctx.arc(x*s,y*s,2.5*s,0,Math.PI*2);
     fctx.fill();
   }
   fctx.restore();
-  if(grow<tree.length)grow+=3;
+  if(grow<tree.length)grow+=2;
 }
 
-/* ===== SNOW ===== */
-const snow=[];
-for(let i=0;i<500;i++){
-  snow.push({
-    x:Math.random()*fx.width,
-    y:Math.random()*fx.height,
-    z:Math.random(),
-    s:Math.random()*1.5+0.5
-  });
-}
 function drawSnow(){
   snow.forEach(f=>{
-    fctx.fillStyle=`rgba(255,255,255,${0.3+f.z})`;
+    fctx.fillStyle="rgba(255,255,255,.7)";
     fctx.beginPath();
-    fctx.arc(f.x,f.y,2+f.z*2,0,Math.PI*2);
+    fctx.arc(f.x,f.y,2,0,Math.PI*2);
     fctx.fill();
-    f.y+=f.s*(1+f.z);
+    f.y+=f.s;
     if(f.y>fx.height){f.y=0;f.x=Math.random()*fx.width;}
   });
 }
 
-/* ===== LOOP ===== */
 function animate(){
   drawGalaxy();
   fctx.clearRect(0,0,fx.width,fx.height);
@@ -258,39 +221,42 @@ const gift=document.getElementById("gift"),
       textEl=document.getElementById("text"),
       music=document.getElementById("music");
 
-const message = `Giáng Sinh lại về ✨
+const message=`Giáng Sinh lại về ✨
 
 Trong không khí dịu dàng của mùa lễ,
 chúc bé Vy
 một mùa Noel thật ấm áp
-và nhiều khoảnh khắc bình yên.
+và bình yên.
 
 Mong rằng những ngày cuối năm
 sẽ nhẹ nhàng trôi qua,
 để lại thật nhiều điều đẹp đẽ.
 
-Merry Christmas🎄`;
+Merry Christmas 🎄`;
 
 gift.onclick=()=>{
   gift.style.display="none";
   card.classList.add("show");
-  music.volume=0;music.play();
+  music.volume=0;
+  music.play();
   let v=0;
   const fade=setInterval(()=>{
-    if(v<0.75){v+=0.01;music.volume=v}else clearInterval(fade);
+    if(v<0.7){v+=0.01;music.volume=v}else clearInterval(fade);
   },120);
   typeWriter();
 };
 
 function typeWriter(){
-  let i=0;textEl.textContent="";
+  let i=0;
+  textEl.textContent="";
   (function write(){
     if(i>=message.length)return;
     textEl.textContent+=message[i];
-    let d=50;
+    let d=70;
     if(message[i]=="\n")d=500;
     if(",.".includes(message[i]))d=350;
-    i++;setTimeout(write,d);
+    i++;
+    setTimeout(write,d+Math.random()*40);
   })();
 }
 </script>
