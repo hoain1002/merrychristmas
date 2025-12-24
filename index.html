@@ -2,208 +2,143 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Merry Christmas Nguyễn Phạm Lâm Vy ✨</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merry Christmas 🎄</title>
 
-<!-- =====================================================
-     FONT
-===================================================== -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<!-- GOOGLE FONTS -->
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
-/* =====================================================
-   RESET + ROOT
-===================================================== */
-:root {
-    --red: #c1121f;
-    --gold: #ffb703;
-    --green: #1b4332;
-    --bg1: #020617;
-    --bg2: #0b1d35;
+/* ================= RESET ================= */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:radial-gradient(circle at top,#1b2735,#090a0f);
+    font-family:'Montserrat',sans-serif;
+    color:#fff;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ================= CANVAS ================= */
+canvas{
+    position:fixed;
+    inset:0;
+    z-index:1;
 }
 
-html, body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: radial-gradient(circle at top, var(--bg2), var(--bg1));
-    font-family: 'Poppins', sans-serif;
-    color: #fff;
+/* ================= SANTA ================= */
+#santa{
+    position:absolute;
+    top:15%;
+    left:-300px;
+    font-size:80px;
+    z-index:4;
+    animation:santaFly 20s linear infinite;
+}
+@keyframes santaFly{
+    0%{transform:translateX(-300px)}
+    100%{transform:translateX(calc(100vw + 300px))}
 }
 
-/* =====================================================
-   CANVAS
-===================================================== */
-canvas {
-    position: absolute;
-    inset: 0;
+/* ================= GIFT ================= */
+#gift{
+    position:absolute;
+    bottom:10%;
+    left:50%;
+    transform:translateX(-50%);
+    width:130px;
+    height:130px;
+    cursor:pointer;
+    z-index:5;
+    animation:giftFloat 3s ease-in-out infinite;
+}
+@keyframes giftFloat{
+    0%,100%{transform:translate(-50%,0)}
+    50%{transform:translate(-50%,-18px)}
+}
+#gift .box{
+    width:100%;
+    height:100%;
+    background:linear-gradient(135deg,#780000,#c1121f);
+    border-radius:14px;
+    box-shadow:0 0 40px rgba(255,0,0,.6);
+}
+#gift::before,#gift::after{
+    content:'';
+    position:absolute;
+    background:#ffd166;
+}
+#gift::before{width:100%;height:18px;top:56px}
+#gift::after{width:18px;height:100%;left:56px}
+
+/* ================= CARD ================= */
+#card{
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,.75);
+    opacity:0;
+    pointer-events:none;
+    transition:1.5s;
+    z-index:10;
+}
+#card.show{opacity:1;pointer-events:auto}
+
+.card-inner{
+    width:560px;
+    padding:55px;
+    background:
+      linear-gradient(135deg,#fff,#fdf0d5),
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="%23fdf0d5"/><circle cx="20" cy="20" r="1" fill="%23e6d8b8"/></svg>');
+    color:#333;
+    border-radius:28px;
+    text-align:center;
+    position:relative;
+    box-shadow:0 50px 120px rgba(0,0,0,.45);
+    animation:cardIn 1.5s ease forwards;
+}
+@keyframes cardIn{
+    from{transform:translateY(60px) scale(.95);opacity:0}
+    to{transform:none;opacity:1}
+}
+.card-inner::before{
+    content:'';
+    position:absolute;
+    inset:-4px;
+    border-radius:32px;
+    background:linear-gradient(45deg,#ffd166,#ef476f,#ffd166);
+    z-index:-1;
+    animation:borderGlow 8s linear infinite;
+}
+@keyframes borderGlow{
+    0%{filter:hue-rotate(0deg)}
+    100%{filter:hue-rotate(360deg)}
 }
 
-/* =====================================================
-   UI LAYER
-===================================================== */
-.ui {
-    position: absolute;
-    inset: 0;
-    z-index: 10;
-    pointer-events: none;
+.card-title{
+    font-family:'Great Vibes',cursive;
+    font-size:56px;
+    color:#c1121f;
+    margin-bottom:20px;
+}
+.card-name{
+    font-family:'Playfair Display',serif;
+    font-size:22px;
+    margin-bottom:25px;
+}
+.card-message{
+    font-size:16px;
+    line-height:1.9;
+    white-space:pre-line;
+    min-height:180px;
 }
 
-/* =====================================================
-   TITLE
-===================================================== */
-.title {
-    position: absolute;
-    top: 40px;
-    width: 100%;
-    text-align: center;
-    font-family: 'Playfair Display', serif;
-    font-size: 36px;
-    letter-spacing: 2px;
-    opacity: 0;
-    animation: fadeIn 2s ease forwards 1s;
-}
-
-@keyframes fadeIn {
-    to { opacity: 1; }
-}
-
-/* =====================================================
-   GIFT BOX
-===================================================== */
-.gift {
-    position: absolute;
-    bottom: 90px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 160px;
-    height: 160px;
-    background: linear-gradient(180deg, #c1121f, #780000);
-    border-radius: 14px;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-    cursor: pointer;
-    pointer-events: auto;
-    transition: transform .6s;
-}
-
-.gift:hover {
-    transform: translateX(-50%) scale(1.08);
-}
-
-.ribbon-v {
-    position: absolute;
-    width: 22px;
-    height: 100%;
-    background: linear-gradient(#ffda79, #ffb703);
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.ribbon-h {
-    position: absolute;
-    height: 22px;
-    width: 100%;
-    background: linear-gradient(#ffda79, #ffb703);
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.lid {
-    position: absolute;
-    top: -32px;
-    width: 100%;
-    height: 38px;
-    background: linear-gradient(#d62828, #9b2226);
-    border-radius: 14px;
-    transition: transform 1.2s ease;
-}
-
-.gift.open .lid {
-    transform: translateY(-110px) rotate(-18deg);
-}
-
-/* =====================================================
-   HINT
-===================================================== */
-.hint {
-    position: absolute;
-    bottom: 45px;
-    width: 100%;
-    text-align: center;
-    font-size: 14px;
-    opacity: .85;
-    animation: blink 1.5s infinite alternate;
-}
-
-@keyframes blink {
-    from { opacity: .4; }
-    to { opacity: 1; }
-}
-
-/* =====================================================
-   CARD
-===================================================== */
-.card {
-    position: absolute;
-    bottom: -100%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 480px;
-    padding: 34px;
-    background: linear-gradient(145deg, #ffffff, #f3f3f3);
-    color: #333;
-    border-radius: 24px;
-    box-shadow: 0 40px 100px rgba(0,0,0,.7);
-    text-align: center;
-    transition: bottom 1.8s cubic-bezier(.19,1,.22,1);
-}
-
-.card.show {
-    bottom: 70px;
-}
-
-.card h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    color: var(--red);
-    margin-bottom: 16px;
-}
-
-.card h3 {
-    font-size: 18px;
-    margin-bottom: 14px;
-    color: #444;
-}
-
-.card p {
-    font-size: 16px;
-    line-height: 1.7;
-    min-height: 180px;
-}
-
-.glow {
-    text-shadow:
-        0 0 6px #fff,
-        0 0 12px var(--gold),
-        0 0 22px var(--gold);
-}
-
-/* =====================================================
-   FOOTER
-===================================================== */
-.footer {
-    position: absolute;
-    bottom: 12px;
-    width: 100%;
-    text-align: center;
-    font-size: 12px;
-    opacity: .6;
+/* ================= MOBILE ================= */
+@media(max-width:600px){
+    .card-inner{width:90%;padding:40px}
+    .card-title{font-size:44px}
 }
 </style>
 </head>
@@ -212,217 +147,169 @@ canvas {
 
 <canvas id="canvas"></canvas>
 
-<div class="ui">
-    <div class="title glow">Merry Christmas ✨</div>
+<div id="santa">🎅🦌🦌</div>
 
-    <div class="gift" id="gift">
-        <div class="lid"></div>
-        <div class="ribbon-v"></div>
-        <div class="ribbon-h"></div>
+<div id="gift">
+    <div class="box"></div>
+</div>
+
+<div id="card">
+    <div class="card-inner">
+        <div class="card-title">Merry Christmas</div>
+        <div class="card-name">Gửi Nguyễn Phạm Lâm Vy</div>
+        <div id="message" class="card-message"></div>
     </div>
-
-    <div class="hint">🎁 Chạm vào hộp quà để mở</div>
-
-    <div class="card" id="card">
-        <h2 class="glow">Gửi Nguyễn Phạm Lâm Vy 🎄</h2>
-        <h3>Một lời chúc nhỏ trong mùa đông</h3>
-        <p id="text"></p>
-    </div>
-
-    <div class="footer">Made with ❄️ & sincerity</div>
 </div>
 
 <audio id="music" loop>
-    <source src="https://cdn.pixabay.com/audio/2022/11/22/audio_3a7c0ef7a7.mp3">
+  <source src="https://cdn.pixabay.com/audio/2022/11/22/audio_1b1e6c8c1f.mp3">
 </audio>
-
 <script>
-/* =====================================================
-   CANVAS SETUP
-===================================================== */
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+/* ================= CANVAS ================= */
+const canvas=document.getElementById('canvas');
+const ctx=canvas.getContext('2d');
+function resize(){
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
 }
 resize();
-window.addEventListener('resize', resize);
+addEventListener('resize',resize);
 
-/* =====================================================
-   SNOW SYSTEM (MULTI LAYER)
-===================================================== */
-class Snow {
-    constructor(depth=1) {
-        this.depth = depth;
-        this.reset();
-    }
-    reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * -canvas.height;
-        this.size = (Math.random() * 2 + 1) * this.depth;
-        this.speed = (Math.random() * 0.6 + 0.4) * this.depth;
-        this.wind = Math.random() * 0.3 - 0.15;
-        this.alpha = Math.random() * 0.6 + 0.4;
-    }
-    update() {
-        this.y += this.speed;
-        this.x += this.wind;
-        if (this.y > canvas.height) this.reset();
-    }
-    draw() {
-        ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
-        ctx.fill();
-    }
+/* ================= SNOW 3 LAYERS ================= */
+const snow=[];
+for(let i=0;i<350;i++){
+  snow.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*3+1,
+    s:Math.random()*1.5+0.5,
+    d:Math.random()*Math.PI*2
+  });
 }
-
-const snowflakes = [];
-for (let i = 0; i < 450; i++) snowflakes.push(new Snow(Math.random()*1.5+0.5));
-
-/* =====================================================
-   TREE DRAW (HAND DRAW STYLE)
-===================================================== */
-let treeStep = 0;
-
-function drawTree() {
-    const cx = canvas.width / 2;
-    const baseY = canvas.height - 160;
-
-    ctx.save();
-
-    // trunk
-    ctx.strokeStyle = '#5a3e2b';
-    ctx.lineWidth = 8;
+function drawSnow(){
+  ctx.fillStyle='white';
+  snow.forEach(s=>{
     ctx.beginPath();
-    ctx.moveTo(cx, baseY);
-    ctx.lineTo(cx, baseY - treeStep*3);
-    ctx.stroke();
-
-    // branches
-    for (let i = 0; i < treeStep; i++) {
-        ctx.strokeStyle = `hsl(${i*6},70%,45%)`;
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(cx - i*3, baseY - i*3);
-        ctx.lineTo(cx + i*3, baseY - i*3);
-        ctx.stroke();
-    }
-
-    // star
-    if (treeStep > 60) {
-        ctx.fillStyle = '#ffd60a';
-        ctx.beginPath();
-        ctx.arc(cx, baseY - treeStep*3 - 10, 6, 0, Math.PI*2);
-        ctx.fill();
-    }
-
-    ctx.restore();
-
-    if (treeStep < 75) treeStep++;
-}
-
-/* =====================================================
-   SANTA + REINDEER
-===================================================== */
-let santaX = -400;
-
-function drawSanta() {
-    santaX += 1.2;
-    const y = 120;
-
-    ctx.save();
-
-    // sleigh
-    ctx.fillStyle = '#e63946';
-    ctx.fillRect(santaX, y, 120, 30);
-
-    // santa head
-    ctx.fillStyle = '#fff';
-    ctx.beginPath();
-    ctx.arc(santaX+100, y-5, 12, 0, Math.PI*2);
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
     ctx.fill();
-
-    // reindeer
-    ctx.strokeStyle = '#8d5524';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(santaX-40, y+15);
-    ctx.lineTo(santaX, y+15);
-    ctx.stroke();
-
-    ctx.restore();
-
-    if (santaX > canvas.width + 400) santaX = -400;
+    s.y+=s.s;
+    s.x+=Math.sin(s.d)*0.3;
+    s.d+=0.01;
+    if(s.y>canvas.height){
+      s.y=-10;
+      s.x=Math.random()*canvas.width;
+    }
+  });
 }
 
-/* =====================================================
-   MAIN LOOP
-===================================================== */
-function animate() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+/* ================= TREE ================= */
+let treeStep=0;
+function drawTree(){
+  const cx=canvas.width/2;
+  const base=canvas.height*0.75;
 
-    snowflakes.forEach(s => {
-        s.update();
-        s.draw();
-    });
+  ctx.save();
+  ctx.strokeStyle='#1b5e20';
+  ctx.lineWidth=3;
+  ctx.lineCap='round';
 
-    drawTree();
-    drawSanta();
+  ctx.beginPath();
+  for(let i=0;i<treeStep;i++){
+    const y=base-i*4;
+    const spread=200-i*1.3;
+    ctx.moveTo(cx,y);
+    ctx.quadraticCurveTo(cx-spread/2,y+8,cx-spread,y);
+    ctx.moveTo(cx,y);
+    ctx.quadraticCurveTo(cx+spread/2,y+8,cx+spread,y);
+  }
+  ctx.stroke();
 
-    requestAnimationFrame(animate);
+  ctx.fillStyle='#5a3a1a';
+  ctx.fillRect(cx-12,base,24,40);
+
+  const glow=Math.sin(Date.now()/400)*12+20;
+  ctx.shadowColor='#ffd166';
+  ctx.shadowBlur=glow;
+  ctx.fillStyle='#ffd166';
+  ctx.beginPath();
+  ctx.arc(cx,base-treeStep*4-18,9,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.restore();
+  if(treeStep<130) treeStep+=0.5;
+}
+
+/* ================= LIGHTS ================= */
+function drawLights(){
+  const cx=canvas.width/2;
+  const base=canvas.height*0.75;
+  const t=Date.now()/700;
+  for(let i=0;i<45;i++){
+    const y=base-i*7;
+    const spread=200-i*1.4;
+    const x=cx-spread/2+Math.sin(i)*spread*0.5;
+    ctx.fillStyle=`hsl(${(i*30+t*60)%360},100%,60%)`;
+    ctx.beginPath();
+    ctx.arc(x,y,3+Math.sin(t+i),0,Math.PI*2);
+    ctx.fill();
+  }
+}
+
+/* ================= ANIMATE ================= */
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  drawSnow();
+  drawTree();
+  drawLights();
+  requestAnimationFrame(animate);
 }
 animate();
 
-/* =====================================================
-   TYPEWRITER MESSAGE
-===================================================== */
-const message = 
-`Nguyễn Phạm Lâm Vy à ✨
+/* ================= CARD & TEXT ================= */
+const gift=document.getElementById('gift');
+const card=document.getElementById('card');
+const msgEl=document.getElementById('message');
+const music=document.getElementById('music');
 
-Giữa mùa đông lạnh,
-anh mong rằng em luôn cảm thấy ấm áp
-không chỉ bởi thời tiết
-mà còn bởi những điều nhỏ bé xung quanh 🎄
+const text=
+`Giáng Sinh lại về,
+mang theo những ánh đèn dịu dàng
+và không khí ấm áp rất riêng.
 
-Chúc em một Giáng Sinh thật an yên,
-luôn mỉm cười thật xinh
-và gặp thật nhiều điều dịu dàng ❄️
+Chúc Lâm Vy
+một mùa Noel thật bình yên,
+luôn mỉm cười thật nhiều,
+và gặp thật nhiều điều tốt đẹp.
 
-Hy vọng trong mùa Noel này,
-anh có thể là một phần
-trong những khoảnh khắc vui của em 💝`;
+Mong rằng
+những khoảnh khắc nhỏ
+đều đủ ấm để nhớ,
+đủ vui để mỉm cười.
 
-let index = 0;
-function typeText() {
-    if (index < message.length) {
-        document.getElementById('text').innerHTML += message.charAt(index);
-        index++;
-        setTimeout(typeText, 42);
-    }
+Merry Christmas 🎄✨`;
+
+gift.onclick=()=>{
+  gift.style.display='none';
+  card.classList.add('show');
+  music.volume=0;
+  music.play();
+  let v=0;
+  const fade=setInterval(()=>{
+    if(v<0.6){v+=0.01;music.volume=v}
+    else clearInterval(fade);
+  },200);
+  typeText();
+};
+
+function typeText(){
+  let i=0;
+  const timer=setInterval(()=>{
+    msgEl.textContent+=text[i];
+    if(text[i]==','||text[i]=='.') clearInterval(timer),setTimeout(typeText,300);
+    i++;
+    if(i>=text.length) clearInterval(timer);
+  },60);
 }
-
-/* =====================================================
-   GIFT EVENT
-===================================================== */
-const gift = document.getElementById('gift');
-const card = document.getElementById('card');
-const music = document.getElementById('music');
-
-gift.addEventListener('click', () => {
-    gift.classList.add('open');
-    gift.style.pointerEvents = 'none';
-    document.querySelector('.hint').style.display = 'none';
-
-    music.play();
-
-    setTimeout(() => {
-        card.classList.add('show');
-        typeText();
-    }, 1400);
-});
 </script>
 
 </body>
