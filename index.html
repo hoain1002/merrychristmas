@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Cosmic Christmas</title>
+<title>Cosmic Christmas – ULTRA MAX</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Allura&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
 html,body{
@@ -14,88 +14,103 @@ html,body{
   height:100%;
   background:#000;
   overflow:hidden;
+  font-family:'Montserrat',sans-serif;
   touch-action:none;
 }
+
 canvas{position:fixed;inset:0}
 
+/* 🎁 GIFT */
 #gift{
   position:absolute;
   bottom:6%;
   left:50%;
   transform:translateX(-50%);
-  width:130px;
-  height:130px;
-  z-index:5;
+  width:140px;
+  height:140px;
+  z-index:10;
   animation:float 4s ease-in-out infinite;
+  cursor:pointer;
 }
 @keyframes float{
   0%,100%{transform:translate(-50%,0)}
-  50%{transform:translate(-50%,-18px)}
+  50%{transform:translate(-50%,-22px)}
 }
 .gift{
   width:100%;
   height:100%;
   border-radius:22px;
-  background:linear-gradient(135deg,#ff005d,#ff9aa2);
-  box-shadow:0 0 40px rgba(255,0,120,.9),
-             0 0 120px rgba(255,0,150,.8);
+  background:linear-gradient(135deg,#ff3b7a,#ffb3c1);
+  box-shadow:
+    0 0 40px rgba(255,0,120,.8),
+    0 0 120px rgba(255,0,150,.9);
+  position:relative;
 }
-.gift::before,.gift::after{
+.gift:before,.gift:after{
   content:'';
   position:absolute;
   background:#ffd166;
 }
-.gift::before{width:100%;height:14px;top:58px}
-.gift::after{width:14px;height:100%;left:58px}
+.gift:before{width:100%;height:14px;top:63px}
+.gift:after{width:14px;height:100%;left:63px}
 
+/* 💌 CARD */
 #card{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.85);
+  background:rgba(0,0,0,.88);
   display:flex;
   align-items:center;
   justify-content:center;
   opacity:0;
   pointer-events:none;
-  transition:1.8s ease;
-  z-index:10;
+  transition:2s ease;
+  z-index:20;
 }
-#card.show{opacity:1;pointer-events:auto}
-
+#card.show{
+  opacity:1;
+  pointer-events:auto;
+}
 .card{
-  width:min(92%,620px);
-  padding:60px;
+  width:min(92%,640px);
+  padding:60px 50px;
   border-radius:36px;
   background:rgba(255,255,255,.08);
-  backdrop-filter:blur(26px);
-  box-shadow:0 0 120px rgba(150,220,255,.6);
-  text-align:center;
+  backdrop-filter:blur(28px);
+  box-shadow:
+    0 0 160px rgba(0,220,255,.6),
+    inset 0 0 80px rgba(255,255,255,.12);
   color:#fff;
+  text-align:center;
 }
-
 .card h1{
-  font-family:'Great Vibes',cursive;
-  font-size:68px;
-  margin-bottom:12px;
-  text-shadow:0 0 40px #9ff;
-}
-
-.card h2{
   font-family:'Allura',cursive;
-  font-size:34px;
-  margin-bottom:30px;
+  font-size:72px;
+  margin:0 0 10px;
+  text-shadow:
+    0 0 30px rgba(180,240,255,.9),
+    0 0 80px rgba(120,200,255,.6);
+}
+.card h2{
+  font-weight:300;
+  margin-bottom:32px;
 }
 
+/* ✍️ HANDWRITING */
 #text{
   font-family:'Allura',cursive;
-  font-size:26px;
-  line-height:2.4;
-  letter-spacing:.6px;
+  font-size:28px;
+  line-height:2.6;
+  letter-spacing:.7px;
   white-space:pre-line;
+  color:#fffdf8;
   text-shadow:
-    0 0 8px rgba(255,255,255,.9),
-    0 0 30px rgba(120,220,255,.5);
+    0 0 6px rgba(255,255,255,.9),
+    0 0 24px rgba(160,220,255,.45),
+    0 0 60px rgba(120,200,255,.3);
 }
+
+audio{display:none}
 </style>
 </head>
 
@@ -115,10 +130,11 @@ canvas{position:fixed;inset:0}
 </div>
 
 <audio id="music" loop>
-<source src="https://cdn.pixabay.com/audio/2023/12/21/audio_92b8c1b0fd.mp3">
+  <source src="https://cdn.pixabay.com/audio/2023/12/21/audio_92b8c1b0fd.mp3">
 </audio>
 
 <script>
+/* ===== SETUP ===== */
 const bg=document.getElementById("bg"),
       fx=document.getElementById("fx"),
       ctx=bg.getContext("2d"),
@@ -128,84 +144,164 @@ function resize(){
   bg.width=fx.width=innerWidth;
   bg.height=fx.height=innerHeight;
 }
-resize();addEventListener("resize",resize);
+resize();
+addEventListener("resize",resize);
+
+/* ===== TOUCH ROTATE ===== */
+let rot=0,targetRot=0,vel=0,down=false,lastX=0;
+function start(x){down=true;lastX=x}
+function move(x){
+  if(!down)return;
+  const d=(x-lastX)*0.004;
+  vel=d*0.9;
+  targetRot+=d;
+  lastX=x;
+}
+function end(){down=false}
+fx.addEventListener("mousedown",e=>start(e.clientX));
+fx.addEventListener("mousemove",e=>move(e.clientX));
+fx.addEventListener("mouseup",end);
+fx.addEventListener("touchstart",e=>start(e.touches[0].clientX));
+fx.addEventListener("touchmove",e=>move(e.touches[0].clientX));
+fx.addEventListener("touchend",end);
 
 /* ===== STARS ===== */
 const stars=[];
-for(let i=0;i<1200;i++){
+for(let i=0;i<1600;i++){
   stars.push({
-    x:(Math.random()-.5)*3000,
-    y:(Math.random()-.5)*3000,
-    z:Math.random()*3000
+    x:(Math.random()-.5)*4000,
+    y:(Math.random()-.5)*4000,
+    z:Math.random()*4000
   });
+}
+
+/* ===== NEBULA ===== */
+const nebula=[];
+for(let i=0;i<60;i++){
+  nebula.push({
+    x:(Math.random()-.5)*2000,
+    y:(Math.random()-.5)*2000,
+    r:300+Math.random()*600,
+    h:Math.random()*360
+  });
+}
+
+/* ===== SANTA ===== */
+let santaX=-300;
+function drawSanta(){
+  const y=bg.height*0.25+Math.sin(Date.now()/700)*18;
+  ctx.save();
+  ctx.translate(santaX,y);
+  ctx.scale(1.3,1.3);
+  ctx.fillStyle="#ff3b3b";
+  ctx.fillRect(0,0,70,24);
+  ctx.fillStyle="#fff";
+  ctx.fillRect(10,-10,30,18);
+  ctx.restore();
+  santaX+=1.8;
+  if(santaX>bg.width+300)santaX=-300;
+}
+
+/* ===== GALAXY ===== */
+function drawGalaxy(){
+  ctx.fillStyle="rgba(0,0,30,.35)";
+  ctx.fillRect(0,0,bg.width,bg.height);
+  ctx.save();
+  ctx.translate(bg.width/2,bg.height/2);
+
+  nebula.forEach(n=>{
+    const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);
+    g.addColorStop(0,`hsla(${n.h},100%,60%,.18)`);
+    g.addColorStop(1,"transparent");
+    ctx.fillStyle=g;
+    ctx.beginPath();
+    ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+    ctx.fill();
+    n.h+=0.02;
+  });
+
+  stars.forEach(s=>{
+    s.z-=6;
+    if(s.z<1)s.z=4000;
+    const k=1000/s.z;
+    ctx.fillStyle=`rgba(200,220,255,${1-s.z/4000})`;
+    ctx.fillRect(s.x*k,s.y*k,2*k,2*k);
+  });
+
+  ctx.restore();
+  drawSanta();
 }
 
 /* ===== TREE ===== */
 let grow=0;
 const tree=[];
-for(let i=0;i<700;i++){
+for(let i=0;i<900;i++){
   tree.push({
-    a:i*0.35,
-    h:i*1.05,
-    r:(1-i/700)*220
+    a:i*0.27,
+    h:i*1.1,
+    r:(1-i/900)*260
   });
-}
-
-/* ===== SNOW ===== */
-const snow=[];
-for(let i=0;i<300;i++){
-  snow.push({
-    x:Math.random()*fx.width,
-    y:Math.random()*fx.height,
-    s:Math.random()*1.5+.5
-  });
-}
-
-function drawGalaxy(){
-  ctx.fillStyle="rgba(0,0,25,.4)";
-  ctx.fillRect(0,0,bg.width,bg.height);
-  ctx.save();
-  ctx.translate(bg.width/2,bg.height/2);
-  stars.forEach(s=>{
-    s.z-=4;
-    if(s.z<1)s.z=3000;
-    const k=900/s.z;
-    ctx.fillStyle="rgba(200,220,255,.8)";
-    ctx.fillRect(s.x*k,s.y*k,2*k,2*k);
-  });
-  ctx.restore();
 }
 
 function drawTree(){
   fctx.save();
-  fctx.translate(fx.width/2,fx.height*0.8);
+  fctx.translate(fx.width/2,fx.height*0.82);
   fctx.globalCompositeOperation="lighter";
+
+  vel*=0.95;
+  targetRot+=vel;
+  rot+=(targetRot-rot)*0.08;
+
   for(let i=0;i<grow;i++){
     const p=tree[i];
-    const x=Math.cos(p.a)*p.r;
-    const z=Math.sin(p.a)*p.r;
+    const a=p.a+rot+Math.sin(Date.now()/1200+i*.04)*0.02;
+    const x=Math.cos(a)*p.r;
+    const z=Math.sin(a)*p.r;
     const y=-p.h;
     const s=900/(900+z);
-    fctx.fillStyle=`hsla(${i*2},100%,60%,.9)`;
+    const hue=(i*2+Date.now()/40)%360;
+    fctx.fillStyle=`hsla(${hue},100%,65%,.85)`;
     fctx.beginPath();
-    fctx.arc(x*s,y*s,2.5*s,0,Math.PI*2);
+    fctx.arc(x*s,y*s,2.6*s,0,Math.PI*2);
     fctx.fill();
   }
+
+  /* ⭐ STAR */
+  const t=Date.now()/600;
+  fctx.fillStyle="rgba(255,255,200,.95)";
+  fctx.beginPath();
+  fctx.arc(0,-tree[tree.length-1].h-30,9+Math.sin(t)*2,0,Math.PI*2);
+  fctx.fill();
+
   fctx.restore();
   if(grow<tree.length)grow+=2;
 }
 
+/* ===== SNOW ===== */
+const snow=[];
+for(let i=0;i<500;i++){
+  snow.push({
+    x:Math.random()*fx.width,
+    y:Math.random()*fx.height,
+    s:Math.random()*1.6+0.4
+  });
+}
 function drawSnow(){
   snow.forEach(f=>{
-    fctx.fillStyle="rgba(255,255,255,.7)";
+    fctx.fillStyle=`rgba(255,255,255,${0.3+f.s/2})`;
     fctx.beginPath();
-    fctx.arc(f.x,f.y,2,0,Math.PI*2);
+    fctx.arc(f.x,f.y,1.5+f.s,0,Math.PI*2);
     fctx.fill();
-    f.y+=f.s;
-    if(f.y>fx.height){f.y=0;f.x=Math.random()*fx.width;}
+    f.y+=f.s*1.2;
+    f.x+=Math.sin(Date.now()/1000+f.y)*0.3;
+    if(f.y>fx.height){
+      f.y=0;
+      f.x=Math.random()*fx.width;
+    }
   });
 }
 
+/* ===== LOOP ===== */
 function animate(){
   drawGalaxy();
   fctx.clearRect(0,0,fx.width,fx.height);
@@ -215,7 +311,7 @@ function animate(){
 }
 animate();
 
-/* ===== CARD ===== */
+/* ===== CARD + TEXT ===== */
 const gift=document.getElementById("gift"),
       card=document.getElementById("card"),
       textEl=document.getElementById("text"),
@@ -226,11 +322,12 @@ const message=`Giáng Sinh lại về ✨
 Trong không khí dịu dàng của mùa lễ,
 chúc bé Vy
 một mùa Noel thật ấm áp
-và bình yên.
+và nhiều khoảnh khắc bình yên.
 
 Mong rằng những ngày cuối năm
-sẽ nhẹ nhàng trôi qua,
-để lại thật nhiều điều đẹp đẽ.
+sẽ trôi qua thật nhẹ,
+để lại những điều đẹp đẽ
+và cảm giác an yên trong lòng.
 
 Merry Christmas 🎄`;
 
@@ -239,10 +336,14 @@ gift.onclick=()=>{
   card.classList.add("show");
   music.volume=0;
   music.play();
+
   let v=0;
   const fade=setInterval(()=>{
-    if(v<0.7){v+=0.01;music.volume=v}else clearInterval(fade);
+    v+=0.008;
+    music.volume=Math.min(v,0.65);
+    if(v>=0.65)clearInterval(fade);
   },120);
+
   typeWriter();
 };
 
@@ -252,11 +353,11 @@ function typeWriter(){
   (function write(){
     if(i>=message.length)return;
     textEl.textContent+=message[i];
-    let d=70;
-    if(message[i]=="\n")d=500;
-    if(",.".includes(message[i]))d=350;
+    let d=60+Math.random()*40;
+    if(message[i]==="\n")d=600;
+    if(",.".includes(message[i]))d=420;
     i++;
-    setTimeout(write,d+Math.random()*40);
+    setTimeout(write,d);
   })();
 }
 </script>
