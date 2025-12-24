@@ -107,6 +107,14 @@ canvas{position:fixed;inset:0}
   .card h1{font-size:46px}
   #text{font-size:21px}
 }
+  /* Ẩn scrollbar nhưng vẫn scroll */
+.card{
+  -ms-overflow-style: none;   /* IE, Edge */
+  scrollbar-width: none;      /* Firefox */
+}
+.card::-webkit-scrollbar{
+  display: none;              /* Chrome, Safari */
+}
 </style>
 </head>
 
@@ -248,19 +256,22 @@ text=document.getElementById("text");
 
 const message=
 `Chúc bé Vy
-một mùa Noel thật ấm áp
-và nhiều khoảnh khắc bình yên.
+một mùa Giáng Sinh thật ấm áp
+và bình yên theo cách rất riêng.
 
-Mong rằng những ngày học tập sắp tới
-luôn nhẹ nhàng,
-các kỳ thi diễn ra suôn sẻ
-và kết quả luôn xứng đáng với sự cố gắng của em.
+Hy vọng những ngày cuối năm
+sẽ trôi qua nhẹ nhàng,
+để mỗi buổi học,
+mỗi kỳ thi
+đều diễn ra suôn sẻ và thuận lợi.
 
-Chúc em luôn tự tin,
-bình tĩnh
-và thi thật tốt ✨
+Chúc em luôn giữ được sự tập trung,
+tự tin vào bản thân
+và đạt được kết quả tốt
+xứng đáng với những nỗ lực của mình.
 
-Merry Christmas 🎄`;
+Merry Christmas 🎄
+Chúc em thi thật tốt ✨`;
 
 gift.onclick=()=>{
   gift.style.display="none";
