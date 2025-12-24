@@ -296,7 +296,9 @@ giữ được sự bình tĩnh
 và làm thật tốt trong mọi bài thi của mình.
 
 Merry Christmas 🎄
-Chúc em thi thật tốt nhoaaaa`; 
+Chúc em thi thật tốt ✨
+`;
+
 gift.onclick = () => {
   gift.style.display = "none";
   card.classList.add("show");
@@ -311,11 +313,11 @@ function typeWriter(){
   let i=0;
   textEl.textContent="";
   function step(){
-    if(i>=message.length)return;
-    textEl.textContent+=message[i];
+    if(i>=message.length) return;
+    textEl.textContent += message[i];
     let d=65;
-    if(message[i]=="\n")d=420;
-    if(",.".includes(message[i]))d=260;
+    if(message[i]=="\n") d=420;
+    if(",.".includes(message[i])) d=260;
     i++;
     setTimeout(()=>requestAnimationFrame(step),d);
   }
