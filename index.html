@@ -3,21 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Cosmic Christmas</title>
+<title>Cosmic Christmas – Ultra Final</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Allura&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
 html,body{
   margin:0;
+  padding:0;
   width:100%;
   height:100%;
   background:#000;
   overflow:hidden;
   font-family:'Montserrat',sans-serif;
-  touch-action:none;
 }
-
 canvas{position:fixed;inset:0}
 
 /* 🎁 GIFT */
@@ -26,23 +25,23 @@ canvas{position:fixed;inset:0}
   bottom:6%;
   left:50%;
   transform:translateX(-50%);
-  width:120px;
-  height:120px;
+  width:110px;
+  height:110px;
   z-index:10;
   animation:float 4s ease-in-out infinite;
 }
 @keyframes float{
   0%,100%{transform:translate(-50%,0)}
-  50%{transform:translate(-50%,-18px)}
+  50%{transform:translate(-50%,-14px)}
 }
 .gift{
   width:100%;
   height:100%;
-  border-radius:22px;
-  background:linear-gradient(135deg,#ff3b7a,#ffb3c1);
+  border-radius:18px;
+  background:linear-gradient(135deg,#ff2d75,#ff9aa2);
   box-shadow:
-    0 0 30px rgba(255,0,120,.7),
-    0 0 90px rgba(255,0,150,.8);
+    0 0 30px rgba(255,0,120,.9),
+    0 0 80px rgba(255,0,150,.8);
   position:relative;
 }
 .gift:before,.gift:after{
@@ -50,72 +49,65 @@ canvas{position:fixed;inset:0}
   position:absolute;
   background:#ffd166;
 }
-.gift:before{width:100%;height:12px;top:54px}
-.gift:after{width:12px;height:100%;left:54px}
+.gift:before{width:100%;height:12px;top:49px}
+.gift:after{width:12px;height:100%;left:49px}
 
 /* 💌 CARD */
 #card{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.88);
+  background:rgba(0,0,0,.86);
   display:flex;
   align-items:center;
   justify-content:center;
   opacity:0;
   pointer-events:none;
-  transition:1.8s ease;
+  transition:1.6s ease;
   z-index:20;
 }
-#card.show{
-  opacity:1;
-  pointer-events:auto;
-}
+#card.show{opacity:1;pointer-events:auto}
+
 .card{
-  width:min(92%,620px);
-  padding:56px 46px;
-  border-radius:34px;
-  background:
-    radial-gradient(circle at top,rgba(255,255,255,.15),transparent 60%),
-    repeating-linear-gradient(
-      0deg,
-      rgba(255,255,255,.03),
-      rgba(255,255,255,.03) 1px,
-      transparent 1px,
-      transparent 3px
-    ),
-    rgba(255,255,255,.08);
-  backdrop-filter:blur(28px);
+  width:min(92%,520px);
+  max-height:82vh;
+  padding:36px 32px;
+  border-radius:28px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(26px);
   box-shadow:
-    0 0 140px rgba(0,220,255,.55),
-    inset 0 0 80px rgba(255,255,255,.12);
+    0 0 120px rgba(0,220,255,.55),
+    inset 0 0 60px rgba(255,255,255,.15);
   color:#fff;
   text-align:center;
+  overflow-y:auto;
 }
+
 .card h1{
-  font-family:'Allura',cursive;
-  font-size:68px;
-  margin:0 0 10px;
-  text-shadow:
-    0 0 28px rgba(180,240,255,.9),
-    0 0 70px rgba(120,200,255,.5);
+  font-family:'Great Vibes',cursive;
+  font-size:60px;
+  margin:0 0 8px;
+  text-shadow:0 0 28px #bff,0 0 70px #9ff;
 }
 .card h2{
   font-weight:300;
-  margin-bottom:28px;
+  margin:0 0 18px;
 }
 
-/* ✍️ HANDWRITING */
 #text{
-  font-family:'Allura',cursive;
-  font-size:27px;
-  line-height:2.6;
-  letter-spacing:.7px;
+  font-family:'Great Vibes',cursive;
+  font-size:26px;
+  line-height:2.1;
+  letter-spacing:.4px;
   white-space:pre-line;
-  color:#fffdf7;
   text-shadow:
-    0 0 3px rgba(255,255,255,.9),
-    0 0 20px rgba(160,220,255,.45),
-    0 0 55px rgba(120,200,255,.25);
+    0 0 6px rgba(255,255,255,.9),
+    0 0 22px rgba(140,220,255,.6);
+}
+
+/* 📱 MOBILE */
+@media(max-width:600px){
+  .card h1{font-size:48px}
+  #text{font-size:22px}
 }
 
 audio{display:none}
@@ -137,12 +129,17 @@ audio{display:none}
   </div>
 </div>
 
-<audio id="music" loop>
-  <source src="https://cdn.pixabay.com/audio/2023/12/21/audio_92b8c1b0fd.mp3">
-</audio>
+<iframe
+  id="spotify"
+  style="position:fixed;opacity:0;pointer-events:none"
+  src="https://open.spotify.com/embed/track/2FRnf9qhLbvw8fu4IBXx78?utm_source=generator&autoplay=1"
+  width="0"
+  height="0"
+  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+</iframe>
 
 <script>
-/* ===== CANVAS ===== */
+/* ===== SETUP ===== */
 const bg=document.getElementById("bg"),
       fx=document.getElementById("fx"),
       ctx=bg.getContext("2d"),
@@ -153,165 +150,110 @@ function resize(){
   bg.height=fx.height=innerHeight;
 }
 resize();
-addEventListener("resize",resize);
+addEventListener("resize",()=>{resize();buildTree()});
 
-/* ===== TOUCH ROTATE ===== */
-let rot=0,targetRot=0,vel=0,down=false,lastX=0;
-function start(x){down=true;lastX=x}
-function move(x){
-  if(!down)return;
-  const d=(x-lastX)*0.004;
-  vel=d*0.9;
-  targetRot+=d;
-  lastX=x;
-}
-function end(){down=false}
-fx.addEventListener("mousedown",e=>start(e.clientX));
-fx.addEventListener("mousemove",e=>move(e.clientX));
-fx.addEventListener("mouseup",end);
-fx.addEventListener("touchstart",e=>start(e.touches[0].clientX));
-fx.addEventListener("touchmove",e=>move(e.touches[0].clientX));
-fx.addEventListener("touchend",end);
-
-/* ===== STARS ===== */
+/* ===== GALAXY ===== */
 const stars=[];
-for(let i=0;i<1400;i++){
+for(let i=0;i<1000;i++){
   stars.push({
     x:(Math.random()-.5)*4000,
     y:(Math.random()-.5)*4000,
     z:Math.random()*4000
   });
 }
-
-/* ===== NEBULA ===== */
-const nebula=[];
-for(let i=0;i<50;i++){
-  nebula.push({
-    x:(Math.random()-.5)*1800,
-    y:(Math.random()-.5)*1800,
-    r:300+Math.random()*500,
-    h:Math.random()*360
-  });
-}
-
-/* ===== SANTA ===== */
-let santaX=-300;
-function drawSanta(){
-  const y=bg.height*0.22+Math.sin(Date.now()/700)*16;
-  ctx.save();
-  ctx.translate(santaX,y);
-  ctx.scale(1.2,1.2);
-  ctx.fillStyle="#ff3b3b";
-  ctx.fillRect(0,0,60,22);
-  ctx.fillStyle="#fff";
-  ctx.fillRect(10,-10,26,16);
-  ctx.restore();
-  santaX+=1.5;
-  if(santaX>bg.width+300)santaX=-300;
-}
-
-/* ===== GALAXY ===== */
 function drawGalaxy(){
-  ctx.fillStyle="rgba(0,0,25,.45)";
+  ctx.fillStyle="rgba(0,0,28,.35)";
   ctx.fillRect(0,0,bg.width,bg.height);
-
   ctx.save();
   ctx.translate(bg.width/2,bg.height/2);
-  const spin=Date.now()/90000;
-
-  nebula.forEach((n,i)=>{
-    const a=spin+i;
-    const nx=Math.cos(a)*n.x-Math.sin(a)*n.y;
-    const ny=Math.sin(a)*n.x+Math.cos(a)*n.y;
-    const g=ctx.createRadialGradient(nx,ny,0,nx,ny,n.r);
-    g.addColorStop(0,`hsla(${n.h},100%,65%,.18)`);
-    g.addColorStop(1,"transparent");
-    ctx.fillStyle=g;
-    ctx.beginPath();
-    ctx.arc(nx,ny,n.r,0,Math.PI*2);
-    ctx.fill();
-    n.h+=0.015;
-  });
-
   stars.forEach(s=>{
-    s.z-=5;
-    if(s.z<1)s.z=4000;
-    const k=1000/s.z;
+    s.z-=6;if(s.z<1)s.z=4000;
+    const k=900/s.z;
     ctx.fillStyle=`rgba(200,220,255,${1-s.z/4000})`;
     ctx.fillRect(s.x*k,s.y*k,2*k,2*k);
   });
-
   ctx.restore();
-  drawSanta();
 }
 
-/* ===== TREE ===== */
+/* ===== TREE 3D ===== */
+let rot=0,targetRot=0,vel=0;
 let grow=0;
 const tree=[];
-for(let i=0;i<850;i++){
-  tree.push({
-    a:i*0.27,
-    h:i*1.1,
-    r:(1-i/850)*240
-  });
+function buildTree(){
+  tree.length=0;
+  grow=0;
+  const maxH=Math.min(innerHeight*0.48,420);
+  const maxR=Math.min(innerWidth*0.22,160);
+  for(let i=0;i<620;i++){
+    const t=i/620;
+    tree.push({
+      a:i*0.32,
+      h:t*maxH,
+      r:(1-t)*maxR
+    });
+  }
 }
+buildTree();
+
+/* TOUCH ROTATE */
+let down=false,lastX=0;
+fx.addEventListener("touchstart",e=>{down=true;lastX=e.touches[0].clientX});
+fx.addEventListener("touchmove",e=>{
+  if(!down)return;
+  const dx=(e.touches[0].clientX-lastX)*0.004;
+  vel+=dx;
+  lastX=e.touches[0].clientX;
+});
+fx.addEventListener("touchend",()=>down=false);
 
 function drawTree(){
   fctx.save();
-  fctx.translate(fx.width/2,fx.height*0.82);
+  fctx.translate(fx.width/2,fx.height*0.76);
   fctx.globalCompositeOperation="lighter";
-
-  vel*=0.93;
-  targetRot+=vel;
-  rot+=(targetRot-rot)*0.06;
-
-  const pulse=Math.sin(Date.now()/600)*0.15;
-
+  vel*=0.95;
+  rot+=vel;
   for(let i=0;i<grow;i++){
     const p=tree[i];
-    const a=p.a+rot+Math.sin(Date.now()/1500+i*.03)*0.02;
+    const a=p.a+rot;
     const x=Math.cos(a)*p.r;
     const z=Math.sin(a)*p.r;
     const y=-p.h;
     const s=900/(900+z);
-    const hue=(i*1.6+Date.now()/60)%360;
-    fctx.fillStyle=`hsla(${hue},100%,${60+pulse*20}%,.9)`;
+    fctx.fillStyle=`hsla(${i*1.4},100%,60%,.9)`;
     fctx.beginPath();
-    fctx.arc(x*s,y*s,2.4*s,0,Math.PI*2);
+    fctx.arc(x*s,y*s,2.6*s,0,Math.PI*2);
     fctx.fill();
   }
 
-  /* STAR */
-  fctx.fillStyle="rgba(255,255,210,.95)";
+  /* ⭐ STAR */
+  const pulse=1+Math.sin(Date.now()/400)*0.15;
+  fctx.fillStyle="rgba(255,255,200,.95)";
   fctx.beginPath();
-  fctx.arc(0,-tree[tree.length-1].h-28,9,0,Math.PI*2);
+  fctx.arc(0,-tree.at(-1).h-16,6*pulse,0,Math.PI*2);
   fctx.fill();
 
   fctx.restore();
-  if(grow<tree.length)grow+=2;
+  if(grow<tree.length)grow+=3;
 }
 
 /* ===== SNOW ===== */
 const snow=[];
-for(let i=0;i<450;i++){
+for(let i=0;i<420;i++){
   snow.push({
     x:Math.random()*fx.width,
     y:Math.random()*fx.height,
-    s:Math.random()*1.4+0.4
+    s:Math.random()*1.6+0.4,
+    z:Math.random()
   });
 }
 function drawSnow(){
   snow.forEach(f=>{
-    fctx.fillStyle=`rgba(255,255,255,${0.25+f.s/2})`;
+    fctx.fillStyle=`rgba(255,255,255,${0.3+f.z})`;
     fctx.beginPath();
-    fctx.arc(f.x,f.y,1.3+f.s,0,Math.PI*2);
+    fctx.arc(f.x,f.y,2+f.z*2,0,Math.PI*2);
     fctx.fill();
-    f.y+=f.s*1.1;
-    f.x+=Math.sin(Date.now()/1000+f.y)*0.25;
-    if(f.y>fx.height){
-      f.y=0;
-      f.x=Math.random()*fx.width;
-    }
+    f.y+=f.s*(1+f.z);
+    if(f.y>fx.height){f.y=0;f.x=Math.random()*fx.width}
   });
 }
 
@@ -325,60 +267,53 @@ function animate(){
 }
 animate();
 
-/* ===== CARD & TEXT ===== */
+/* ===== CARD TEXT ===== */
 const gift=document.getElementById("gift"),
       card=document.getElementById("card"),
       textEl=document.getElementById("text"),
       music=document.getElementById("music");
 
-const message=`Giáng Sinh lại về ✨
-
-Trong không khí dịu dàng của mùa lễ,
-chúc bé Vy
+const message = `
+Chúc bé Vy
 một mùa Noel thật ấm áp
 và nhiều khoảnh khắc bình yên.
 
-Mong rằng những ngày cuối năm
-sẽ trôi qua thật nhẹ,
-để lại những điều đẹp đẽ
-và cảm giác an yên trong lòng.
+Những ngày sắp tới có thể bận rộn hơn một chút,
+nhưng mong rằng mỗi buổi học,
+mỗi kỳ thi, đều diễn ra nhẹ nhàng và suôn sẻ với em nhaa.
 
-Merry Christmas 🎄`;
+Chúc bé luôn tự tin, 
+giữ được sự bình tĩnh
+và làm điểm cao trong mọi bài thi của mình.
+
+Merry Christmas 🎄
+Chúc em thi thật tốt nhoaaa✨`;
 
 gift.onclick=()=>{
-  gift.style.transition="1s ease";
-  gift.style.transform="translate(-50%,-120px) scale(1.2)";
-  gift.style.opacity=0;
-
-  setTimeout(()=>{
-    gift.style.display="none";
-    card.classList.add("show");
-  },900);
-
+  gift.style.display="none";
+  card.classList.add("show");
   music.volume=0;
   music.play();
   let v=0;
   const fade=setInterval(()=>{
-    v+=0.01;
-    music.volume=Math.min(v,0.6);
-    if(v>=0.6)clearInterval(fade);
+    if(v<0.75){v+=0.01;music.volume=v}else clearInterval(fade);
   },120);
-
   typeWriter();
 };
 
 function typeWriter(){
   let i=0;
   textEl.textContent="";
-  (function write(){
+  function step(){
     if(i>=message.length)return;
     textEl.textContent+=message[i];
-    let d=70+Math.random()*60;
-    if(message[i]==="\n")d=650;
-    if(",.".includes(message[i]))d=450;
+    let d=65;
+    if(message[i]=="\n")d=420;
+    if(",.".includes(message[i]))d=260;
     i++;
-    setTimeout(write,d);
-  })();
+    setTimeout(()=>requestAnimationFrame(step),d);
+  }
+  step();
 }
 </script>
 
