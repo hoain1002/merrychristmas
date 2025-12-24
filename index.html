@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title> Merry Christmas-Lâm Vy </title>
+<title>Merry Christmas – Lâm Vy</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
 
@@ -59,7 +59,7 @@ canvas{position:fixed;inset:0}
   justify-content:center;
   opacity:0;
   pointer-events:none;
-  transition:1.4s ease;
+  transition:1.2s ease;
   z-index:20;
 }
 #card.show{opacity:1;pointer-events:auto}
@@ -67,7 +67,7 @@ canvas{position:fixed;inset:0}
 .card{
   width:min(92%,520px);
   max-height:82vh;
-  padding:34px;
+  padding:32px;
   border-radius:28px;
   background:rgba(255,255,255,.08);
   backdrop-filter:blur(26px);
@@ -75,26 +75,31 @@ canvas{position:fixed;inset:0}
   color:white;
   text-align:center;
   overflow-y:auto;
+
+  -ms-overflow-style:none;
+  scrollbar-width:none;
 }
+.card::-webkit-scrollbar{display:none}
+
 .card h1{
   font-family:'Great Vibes',cursive;
   font-size:56px;
   margin:0;
   text-shadow:0 0 30px #9ff;
 }
-.card h2{font-weight:300;margin:10px 0 18px}
 
 #text{
+  margin-top:18px;
   font-family:'Great Vibes',cursive;
   font-size:24px;
-  line-height:2;
+  line-height:1.9;
   white-space:pre-line;
   text-shadow:0 0 18px rgba(180,240,255,.8);
 }
 
 #close{
   margin-top:22px;
-  padding:10px 26px;
+  padding:10px 28px;
   border-radius:22px;
   border:none;
   background:rgba(255,255,255,.15);
@@ -102,18 +107,9 @@ canvas{position:fixed;inset:0}
   cursor:pointer;
 }
 
-/* MOBILE */
 @media(max-width:600px){
   .card h1{font-size:46px}
   #text{font-size:21px}
-}
-  /* Ẩn scrollbar nhưng vẫn scroll */
-.card{
-  -ms-overflow-style: none;   /* IE, Edge */
-  scrollbar-width: none;      /* Firefox */
-}
-.card::-webkit-scrollbar{
-  display: none;              /* Chrome, Safari */
 }
 </style>
 </head>
@@ -128,76 +124,71 @@ canvas{position:fixed;inset:0}
 <div id="card">
   <div class="card">
     <h1>Merry Christmas</h1>
-    <!-- <h2>Gửi Nguyễn Phạm Lâm Vy</h2> -->
     <div id="text"></div>
     <button id="close">Đóng ✨</button>
   </div>
 </div>
 
-<iframe
-  style="position:fixed;opacity:0"
-  src="https://open.spotify.com/embed/track/2FRnf9qhLbvw8fu4IBXx78?autoplay=1"
-  allow="autoplay">
-</iframe>
-
 <script>
 /* ===== CANVAS ===== */
-const bg=document.getElementById("bg"),
-fx=document.getElementById("fx"),
-ctx=bg.getContext("2d"),
-fctx=fx.getContext("2d");
+const bg = document.getElementById("bg");
+const fx = document.getElementById("fx");
+const ctx = bg.getContext("2d");
+const fctx = fx.getContext("2d");
 
 function resize(){
-  bg.width=fx.width=innerWidth;
-  bg.height=fx.height=innerHeight;
+  bg.width = fx.width = innerWidth;
+  bg.height = fx.height = innerHeight;
 }
 resize();
-addEventListener("resize",resize);
+addEventListener("resize", resize);
 
 /* ===== STARS ===== */
-const stars=[...Array(900)].map(()=>({
+const stars = Array.from({length:800},()=>({
   x:(Math.random()-.5)*4000,
   y:(Math.random()-.5)*4000,
   z:Math.random()*4000
 }));
 
 /* ===== SNOW ===== */
-const snow=[...Array(450)].map(()=>({
-  x:Math.random()*fx.width,
-  y:Math.random()*fx.height,
-  s:Math.random()*1.8+0.4,
+const snow = Array.from({length:420},()=>({
+  x:Math.random()*innerWidth,
+  y:Math.random()*innerHeight,
+  s:Math.random()*1.5+0.5,
   a:Math.random()
 }));
 
 /* ===== TREE ===== */
-let rot=0,vel=0,grow=0;
+let rot=0, vel=0, grow=0;
 const tree=[];
-const maxH=Math.min(innerHeight*0.48,420);
+const maxH=Math.min(innerHeight*0.45,420);
 const maxR=Math.min(innerWidth*0.22,160);
 for(let i=0;i<620;i++){
   const t=i/620;
   tree.push({a:i*0.32,h:t*maxH,r:(1-t)*maxR});
 }
 
-/* TOUCH */
+/* TOUCH ROTATE */
 let down=false,lastX=0;
-fx.addEventListener("touchstart",e=>{down=true;lastX=e.touches[0].clientX});
+fx.addEventListener("touchstart",e=>{
+  down=true; lastX=e.touches[0].clientX;
+});
 fx.addEventListener("touchmove",e=>{
-  if(!down)return;
+  if(!down) return;
   vel+=(e.touches[0].clientX-lastX)*0.004;
   lastX=e.touches[0].clientX;
 });
 fx.addEventListener("touchend",()=>down=false);
 
-/* ===== DRAW ===== */
+/* ===== DRAW LOOP ===== */
 function draw(){
-  /* GALAXY */
   ctx.fillStyle="rgba(0,0,30,.35)";
   ctx.fillRect(0,0,bg.width,bg.height);
+
   ctx.save();
   ctx.translate(bg.width/2,bg.height/2);
   stars.forEach(s=>{
-    s.z-=6;if(s.z<1)s.z=4000;
+    s.z-=6; if(s.z<1) s.z=4000;
     const k=900/s.z;
     ctx.fillStyle=`rgba(200,220,255,${1-s.z/4000})`;
     ctx.fillRect(s.x*k,s.y*k,2*k,2*k);
@@ -206,9 +197,8 @@ function draw(){
 
   fctx.clearRect(0,0,fx.width,fx.height);
 
-  /* SNOW */
   snow.forEach(f=>{
-    f.y+=f.s*(1+f.a);
+    f.y+=f.s;
     if(f.y>fx.height){f.y=0;f.x=Math.random()*fx.width}
     fctx.fillStyle=`rgba(255,255,255,${0.3+f.a})`;
     fctx.beginPath();
@@ -216,13 +206,12 @@ function draw(){
     fctx.fill();
   });
 
-  /* TREE */
   fctx.save();
-  fctx.translate(fx.width/2,fx.height*0.76);
+  fctx.translate(fx.width/2,fx.height*0.75);
   fctx.globalCompositeOperation="lighter";
-  vel*=0.96;
-  rot+=vel+0.0015;
-  if(grow<tree.length)grow+=2;
+  vel*=0.95;
+  rot+=vel+0.0012;
+  if(grow<tree.length) grow+=2;
 
   for(let i=0;i<grow;i++){
     const p=tree[i];
@@ -237,22 +226,15 @@ function draw(){
     fctx.fill();
   }
 
-  /* STAR */
-  const pulse=1+Math.sin(Date.now()/400)*0.2;
-  fctx.fillStyle="rgba(255,255,200,.95)";
-  fctx.beginPath();
-  fctx.arc(0,-maxH-18,6*pulse,0,Math.PI*2);
-  fctx.fill();
   fctx.restore();
-
   requestAnimationFrame(draw);
 }
 draw();
 
-/* ===== CARD ===== */
-const gift=document.getElementById("gift"),
-card=document.getElementById("card"),
-text=document.getElementById("text");
+/* ===== CARD + MUSIC ===== */
+const gift=document.getElementById("gift");
+const card=document.getElementById("card");
+const text=document.getElementById("text");
 
 const message = `
 Chúc bé Vy
@@ -273,10 +255,20 @@ Merry Christmas 🎄
 Chúc em thi thật tốt nhoaaaa✨
 `;
 
+function playMusic(){
+  const iframe=document.createElement("iframe");
+  iframe.src="https://open.spotify.com/embed/track/2FRnf9qhLbvw8fu4IBXx78?autoplay=1";
+  iframe.allow="autoplay";
+  iframe.style.position="fixed";
+  iframe.style.opacity="0";
+  document.body.appendChild(iframe);
+}
+
 gift.onclick=()=>{
   gift.style.display="none";
   card.classList.add("show");
-  type();
+  playMusic();
+  typeWriter();
 };
 
 document.getElementById("close").onclick=()=>{
@@ -284,19 +276,13 @@ document.getElementById("close").onclick=()=>{
   gift.style.display="block";
 };
 
-function type(){
-  let i=0,last=0;
+function typeWriter(){
+  let i=0;
   text.textContent="";
-  function step(t){
-    if(i>=message.length)return;
-    const d=message[i]=="\n"?360:",.".includes(message[i])?220:55;
-    if(t-last>d){
-      text.textContent+=message[i++];
-      last=t;
-    }
-    requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
+  const interval=setInterval(()=>{
+    text.textContent+=message[i++];
+    if(i>=message.length) clearInterval(interval);
+  },45);
 }
 </script>
 
