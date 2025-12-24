@@ -10,7 +10,6 @@
 <style>
 html,body{
   margin:0;
-  padding:0;
   width:100%;
   height:100%;
   background:#000;
@@ -39,9 +38,7 @@ canvas{position:fixed;inset:0}
   height:100%;
   border-radius:18px;
   background:linear-gradient(135deg,#ff2d75,#ff9aa2);
-  box-shadow:
-    0 0 30px rgba(255,0,120,.9),
-    0 0 80px rgba(255,0,150,.8);
+  box-shadow:0 0 40px rgba(255,0,140,.9);
   position:relative;
 }
 .gift:before,.gift:after{
@@ -56,13 +53,13 @@ canvas{position:fixed;inset:0}
 #card{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.86);
+  background:rgba(0,0,0,.85);
   display:flex;
   align-items:center;
   justify-content:center;
   opacity:0;
   pointer-events:none;
-  transition:1.6s ease;
+  transition:1.4s ease;
   z-index:20;
 }
 #card.show{opacity:1;pointer-events:auto}
@@ -70,47 +67,46 @@ canvas{position:fixed;inset:0}
 .card{
   width:min(92%,520px);
   max-height:82vh;
-  padding:36px 32px;
+  padding:34px;
   border-radius:28px;
   background:rgba(255,255,255,.08);
   backdrop-filter:blur(26px);
-  box-shadow:
-    0 0 120px rgba(0,220,255,.55),
-    inset 0 0 60px rgba(255,255,255,.15);
-  color:#fff;
+  box-shadow:0 0 120px rgba(0,220,255,.55);
+  color:white;
   text-align:center;
   overflow-y:auto;
 }
-
 .card h1{
   font-family:'Great Vibes',cursive;
-  font-size:60px;
-  margin:0 0 8px;
-  text-shadow:0 0 28px #bff,0 0 70px #9ff;
+  font-size:56px;
+  margin:0;
+  text-shadow:0 0 30px #9ff;
 }
-.card h2{
-  font-weight:300;
-  margin:0 0 18px;
-}
+.card h2{font-weight:300;margin:10px 0 18px}
 
 #text{
   font-family:'Great Vibes',cursive;
-  font-size:26px;
-  line-height:2.1;
-  letter-spacing:.4px;
+  font-size:24px;
+  line-height:2;
   white-space:pre-line;
-  text-shadow:
-    0 0 6px rgba(255,255,255,.9),
-    0 0 22px rgba(140,220,255,.6);
+  text-shadow:0 0 18px rgba(180,240,255,.8);
 }
 
-/* 📱 MOBILE */
+#close{
+  margin-top:22px;
+  padding:10px 26px;
+  border-radius:22px;
+  border:none;
+  background:rgba(255,255,255,.15);
+  color:white;
+  cursor:pointer;
+}
+
+/* MOBILE */
 @media(max-width:600px){
-  .card h1{font-size:48px}
-  #text{font-size:22px}
+  .card h1{font-size:46px}
+  #text{font-size:21px}
 }
-
-audio{display:none}
 </style>
 </head>
 
@@ -126,97 +122,99 @@ audio{display:none}
     <h1>Merry Christmas</h1>
     <h2>Gửi Nguyễn Phạm Lâm Vy</h2>
     <div id="text"></div>
+    <button id="close">Đóng ✨</button>
   </div>
 </div>
 
 <iframe
-  id="spotify"
-  style="position:fixed;opacity:0;pointer-events:none"
-  src="https://open.spotify.com/embed/track/2FRnf9qhLbvw8fu4IBXx78?utm_source=generator&autoplay=1"
-  width="0"
-  height="0"
-  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+  style="position:fixed;opacity:0"
+  src="https://open.spotify.com/embed/track/2FRnf9qhLbvw8fu4IBXx78?autoplay=1"
+  allow="autoplay">
 </iframe>
 
 <script>
-/* ===== SETUP ===== */
+/* ===== CANVAS ===== */
 const bg=document.getElementById("bg"),
-      fx=document.getElementById("fx"),
-      ctx=bg.getContext("2d"),
-      fctx=fx.getContext("2d");
+fx=document.getElementById("fx"),
+ctx=bg.getContext("2d"),
+fctx=fx.getContext("2d");
 
 function resize(){
   bg.width=fx.width=innerWidth;
   bg.height=fx.height=innerHeight;
 }
 resize();
-addEventListener("resize",()=>{resize();buildTree()});
+addEventListener("resize",resize);
 
-/* ===== GALAXY ===== */
-const stars=[];
-for(let i=0;i<1000;i++){
-  stars.push({
-    x:(Math.random()-.5)*4000,
-    y:(Math.random()-.5)*4000,
-    z:Math.random()*4000
-  });
+/* ===== STARS ===== */
+const stars=[...Array(900)].map(()=>({
+  x:(Math.random()-.5)*4000,
+  y:(Math.random()-.5)*4000,
+  z:Math.random()*4000
+}));
+
+/* ===== SNOW ===== */
+const snow=[...Array(450)].map(()=>({
+  x:Math.random()*fx.width,
+  y:Math.random()*fx.height,
+  s:Math.random()*1.8+0.4,
+  a:Math.random()
+}));
+
+/* ===== TREE ===== */
+let rot=0,vel=0,grow=0;
+const tree=[];
+const maxH=Math.min(innerHeight*0.48,420);
+const maxR=Math.min(innerWidth*0.22,160);
+for(let i=0;i<620;i++){
+  const t=i/620;
+  tree.push({a:i*0.32,h:t*maxH,r:(1-t)*maxR});
 }
-function drawGalaxy(){
-  ctx.fillStyle="rgba(0,0,28,.35)";
+
+/* TOUCH */
+let down=false,lastX=0;
+fx.addEventListener("touchstart",e=>{down=true;lastX=e.touches[0].clientX});
+fx.addEventListener("touchmove",e=>{
+  if(!down)return;
+  vel+=(e.touches[0].clientX-lastX)*0.004;
+  lastX=e.touches[0].clientX;
+});
+fx.addEventListener("touchend",()=>down=false);
+
+/* ===== DRAW ===== */
+function draw(){
+  /* GALAXY */
+  ctx.fillStyle="rgba(0,0,30,.35)";
   ctx.fillRect(0,0,bg.width,bg.height);
   ctx.save();
   ctx.translate(bg.width/2,bg.height/2);
   stars.forEach(s=>{
-    s.z-=6;
-    if(s.z<1)s.z=4000;
+    s.z-=6;if(s.z<1)s.z=4000;
     const k=900/s.z;
     ctx.fillStyle=`rgba(200,220,255,${1-s.z/4000})`;
     ctx.fillRect(s.x*k,s.y*k,2*k,2*k);
   });
   ctx.restore();
-}
 
-/* ===== TREE 3D ===== */
-let rot=0,vel=0;
-let grow=0;
-const tree=[];
+  fctx.clearRect(0,0,fx.width,fx.height);
 
-function buildTree(){
-  tree.length=0;
-  grow=0;
-  const maxH=Math.min(innerHeight*0.48,420);
-  const maxR=Math.min(innerWidth*0.22,160);
-  for(let i=0;i<620;i++){
-    const t=i/620;
-    tree.push({
-      a:i*0.32,
-      h:t*maxH,
-      r:(1-t)*maxR
-    });
-  }
-}
-buildTree();
+  /* SNOW */
+  snow.forEach(f=>{
+    f.y+=f.s*(1+f.a);
+    if(f.y>fx.height){f.y=0;f.x=Math.random()*fx.width}
+    fctx.fillStyle=`rgba(255,255,255,${0.3+f.a})`;
+    fctx.beginPath();
+    fctx.arc(f.x,f.y,2+f.a*2,0,Math.PI*2);
+    fctx.fill();
+  });
 
-/* TOUCH ROTATE */
-let down=false,lastX=0;
-fx.addEventListener("touchstart",e=>{
-  down=true;
-  lastX=e.touches[0].clientX;
-});
-fx.addEventListener("touchmove",e=>{
-  if(!down)return;
-  const dx=(e.touches[0].clientX-lastX)*0.004;
-  vel+=dx;
-  lastX=e.touches[0].clientX;
-});
-fx.addEventListener("touchend",()=>down=false);
-
-function drawTree(){
+  /* TREE */
   fctx.save();
   fctx.translate(fx.width/2,fx.height*0.76);
   fctx.globalCompositeOperation="lighter";
-  vel*=0.95;
-  rot+=vel;
+  vel*=0.96;
+  rot+=vel+0.0015;
+  if(grow<tree.length)grow+=2;
 
   for(let i=0;i<grow;i++){
     const p=tree[i];
@@ -231,100 +229,65 @@ function drawTree(){
     fctx.fill();
   }
 
-  /* ⭐ STAR TOP */
-  const pulse=1+Math.sin(Date.now()/400)*0.15;
+  /* STAR */
+  const pulse=1+Math.sin(Date.now()/400)*0.2;
   fctx.fillStyle="rgba(255,255,200,.95)";
   fctx.beginPath();
-  fctx.arc(0,-tree.at(-1).h-16,6*pulse,0,Math.PI*2);
+  fctx.arc(0,-maxH-18,6*pulse,0,Math.PI*2);
   fctx.fill();
-
   fctx.restore();
-  if(grow<tree.length)grow+=3;
-}
 
-/* ===== SNOW ===== */
-const snow=[];
-for(let i=0;i<420;i++){
-  snow.push({
-    x:Math.random()*fx.width,
-    y:Math.random()*fx.height,
-    s:Math.random()*1.6+0.4,
-    z:Math.random()
-  });
+  requestAnimationFrame(draw);
 }
-function drawSnow(){
-  snow.forEach(f=>{
-    fctx.fillStyle=`rgba(255,255,255,${0.3+f.z})`;
-    fctx.beginPath();
-    fctx.arc(f.x,f.y,2+f.z*2,0,Math.PI*2);
-    fctx.fill();
-    f.y+=f.s*(1+f.z);
-    if(f.y>fx.height){
-      f.y=0;
-      f.x=Math.random()*fx.width;
-    }
-  });
-}
+draw();
 
-/* ===== LOOP ===== */
-function animate(){
-  drawGalaxy();
-  fctx.clearRect(0,0,fx.width,fx.height);
-  drawSnow();
-  drawTree();
-  requestAnimationFrame(animate);
-}
-animate();
-
-/* ===== CARD & TEXT ===== */
+/* ===== CARD ===== */
 const gift=document.getElementById("gift"),
-      card=document.getElementById("card"),
-      textEl=document.getElementById("text"),
-      spotify=document.getElementById("spotify");
+card=document.getElementById("card"),
+text=document.getElementById("text");
 
-const message = `
-Chúc bé Vy
+const message=
+`Chúc bé Vy
 một mùa Noel thật ấm áp
 và nhiều khoảnh khắc bình yên.
 
-Những ngày sắp tới có thể bận rộn hơn một chút,
-nhưng mong rằng mỗi buổi học,
-mỗi kỳ thi đều diễn ra nhẹ nhàng và suôn sẻ với em nhaaa.
+Mong rằng những ngày học tập sắp tới
+luôn nhẹ nhàng,
+các kỳ thi diễn ra suôn sẻ
+và kết quả luôn xứng đáng với sự cố gắng của em.
 
-Chúc bé luôn tự tin,
-giữ được sự bình tĩnh
-và làm thật tốt trong mọi bài thi của mình.
+Chúc em luôn tự tin,
+bình tĩnh
+và thi thật tốt ✨
 
-Merry Christmas 🎄
-Chúc em thi thật tốt ✨
-`;
+Merry Christmas 🎄`;
 
-gift.onclick = () => {
-  gift.style.display = "none";
+gift.onclick=()=>{
+  gift.style.display="none";
   card.classList.add("show");
-
-  // kích hoạt Spotify sau click
-  spotify.src += "";
-
-  typeWriter();
+  type();
 };
 
-function typeWriter(){
-  let i=0;
-  textEl.textContent="";
-  function step(){
-    if(i>=message.length) return;
-    textEl.textContent += message[i];
-    let d=65;
-    if(message[i]=="\n") d=420;
-    if(",.".includes(message[i])) d=260;
-    i++;
-    setTimeout(()=>requestAnimationFrame(step),d);
+document.getElementById("close").onclick=()=>{
+  card.classList.remove("show");
+  gift.style.display="block";
+};
+
+function type(){
+  let i=0,last=0;
+  text.textContent="";
+  function step(t){
+    if(i>=message.length)return;
+    const d=message[i]=="\n"?360:",.".includes(message[i])?220:55;
+    if(t-last>d){
+      text.textContent+=message[i++];
+      last=t;
+    }
+    requestAnimationFrame(step);
   }
-  step();
+  requestAnimationFrame(step);
 }
 </script>
-
 
 </body>
 </html>
