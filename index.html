@@ -167,7 +167,8 @@ function drawGalaxy(){
   ctx.save();
   ctx.translate(bg.width/2,bg.height/2);
   stars.forEach(s=>{
-    s.z-=6;if(s.z<1)s.z=4000;
+    s.z-=6;
+    if(s.z<1)s.z=4000;
     const k=900/s.z;
     ctx.fillStyle=`rgba(200,220,255,${1-s.z/4000})`;
     ctx.fillRect(s.x*k,s.y*k,2*k,2*k);
@@ -176,9 +177,10 @@ function drawGalaxy(){
 }
 
 /* ===== TREE 3D ===== */
-let rot=0,targetRot=0,vel=0;
+let rot=0,vel=0;
 let grow=0;
 const tree=[];
+
 function buildTree(){
   tree.length=0;
   grow=0;
@@ -197,7 +199,10 @@ buildTree();
 
 /* TOUCH ROTATE */
 let down=false,lastX=0;
-fx.addEventListener("touchstart",e=>{down=true;lastX=e.touches[0].clientX});
+fx.addEventListener("touchstart",e=>{
+  down=true;
+  lastX=e.touches[0].clientX;
+});
 fx.addEventListener("touchmove",e=>{
   if(!down)return;
   const dx=(e.touches[0].clientX-lastX)*0.004;
@@ -212,6 +217,7 @@ function drawTree(){
   fctx.globalCompositeOperation="lighter";
   vel*=0.95;
   rot+=vel;
+
   for(let i=0;i<grow;i++){
     const p=tree[i];
     const a=p.a+rot;
@@ -225,7 +231,7 @@ function drawTree(){
     fctx.fill();
   }
 
-  /* ⭐ STAR */
+  /* ⭐ STAR TOP */
   const pulse=1+Math.sin(Date.now()/400)*0.15;
   fctx.fillStyle="rgba(255,255,200,.95)";
   fctx.beginPath();
@@ -253,7 +259,10 @@ function drawSnow(){
     fctx.arc(f.x,f.y,2+f.z*2,0,Math.PI*2);
     fctx.fill();
     f.y+=f.s*(1+f.z);
-    if(f.y>fx.height){f.y=0;f.x=Math.random()*fx.width}
+    if(f.y>fx.height){
+      f.y=0;
+      f.x=Math.random()*fx.width;
+    }
   });
 }
 
@@ -267,11 +276,11 @@ function animate(){
 }
 animate();
 
-/* ===== CARD TEXT ===== */
+/* ===== CARD & TEXT ===== */
 const gift=document.getElementById("gift"),
       card=document.getElementById("card"),
       textEl=document.getElementById("text"),
-      music=document.getElementById("music");
+      spotify=document.getElementById("spotify");
 
 const message = `
 Chúc bé Vy
@@ -280,24 +289,20 @@ và nhiều khoảnh khắc bình yên.
 
 Những ngày sắp tới có thể bận rộn hơn một chút,
 nhưng mong rằng mỗi buổi học,
-mỗi kỳ thi, đều diễn ra nhẹ nhàng và suôn sẻ với em nhaa.
+mỗi kỳ thi đều diễn ra nhẹ nhàng và suôn sẻ với em nhaaa.
 
-Chúc bé luôn tự tin, 
+Chúc bé luôn tự tin,
 giữ được sự bình tĩnh
-và làm điểm cao trong mọi bài thi của mình.
+và làm thật tốt trong mọi bài thi của mình.
 
 Merry Christmas 🎄
-Chúc em thi thật tốt nhoaaa✨`;
-
-gift.onclick=()=>{
-  gift.style.display="none";
+nhoaaaChúc gift.onclick = () => {
+  gift.style.display = "none";
   card.classList.add("show");
-  music.volume=0;
-  music.play();
-  let v=0;
-  const fade=setInterval(()=>{
-    if(v<0.75){v+=0.01;music.volume=v}else clearInterval(fade);
-  },120);
+
+  // kích hoạt Spotify sau click
+  spotify.src += "";
+
   typeWriter();
 };
 
@@ -316,6 +321,7 @@ function typeWriter(){
   step();
 }
 </script>
+
 
 </body>
 </html>
