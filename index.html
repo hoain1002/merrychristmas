@@ -2,76 +2,54 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Merry Christmas 🎄</title>
+<title>Merry Christmas</title>
 
-<!-- GOOGLE FONTS -->
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Great+Vibes&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
-/* ================= RESET ================= */
-*{margin:0;padding:0;box-sizing:border-box}
 html,body{
+    margin:0;
+    padding:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    background:radial-gradient(circle at top,#1b2735,#090a0f);
+    background:radial-gradient(circle at top,#1a2a3a,#050608);
     font-family:'Montserrat',sans-serif;
-    color:#fff;
 }
-
-/* ================= CANVAS ================= */
 canvas{
     position:fixed;
     inset:0;
-    z-index:1;
 }
-
-/* ================= SANTA ================= */
-#santa{
-    position:absolute;
-    top:15%;
-    left:-300px;
-    font-size:80px;
-    z-index:4;
-    animation:santaFly 20s linear infinite;
-}
-@keyframes santaFly{
-    0%{transform:translateX(-300px)}
-    100%{transform:translateX(calc(100vw + 300px))}
-}
-
-/* ================= GIFT ================= */
 #gift{
     position:absolute;
     bottom:10%;
     left:50%;
     transform:translateX(-50%);
-    width:130px;
-    height:130px;
+    width:140px;
+    height:140px;
     cursor:pointer;
     z-index:5;
-    animation:giftFloat 3s ease-in-out infinite;
+    animation:float 3s ease-in-out infinite;
 }
-@keyframes giftFloat{
+@keyframes float{
     0%,100%{transform:translate(-50%,0)}
-    50%{transform:translate(-50%,-18px)}
+    50%{transform:translate(-50%,-20px)}
 }
 #gift .box{
     width:100%;
     height:100%;
-    background:linear-gradient(135deg,#780000,#c1121f);
-    border-radius:14px;
-    box-shadow:0 0 40px rgba(255,0,0,.6);
+    background:linear-gradient(135deg,#7a0000,#c1121f);
+    border-radius:16px;
+    box-shadow:0 0 50px rgba(255,0,0,.7);
 }
 #gift::before,#gift::after{
     content:'';
     position:absolute;
     background:#ffd166;
 }
-#gift::before{width:100%;height:18px;top:56px}
-#gift::after{width:18px;height:100%;left:56px}
+#gift::before{width:100%;height:18px;top:60px}
+#gift::after{width:18px;height:100%;left:60px}
 
-/* ================= CARD ================= */
 #card{
     position:fixed;
     inset:0;
@@ -86,59 +64,45 @@ canvas{
 }
 #card.show{opacity:1;pointer-events:auto}
 
-.card-inner{
+.card{
     width:560px;
-    padding:55px;
-    background:
-      linear-gradient(135deg,#fff,#fdf0d5),
-      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="%23fdf0d5"/><circle cx="20" cy="20" r="1" fill="%23e6d8b8"/></svg>');
-    color:#333;
-    border-radius:28px;
+    padding:60px;
+    background:linear-gradient(135deg,#fff,#fdf0d5);
+    border-radius:30px;
+    box-shadow:0 60px 140px rgba(0,0,0,.5);
     text-align:center;
+    color:#333;
     position:relative;
-    box-shadow:0 50px 120px rgba(0,0,0,.45);
-    animation:cardIn 1.5s ease forwards;
 }
-@keyframes cardIn{
-    from{transform:translateY(60px) scale(.95);opacity:0}
-    to{transform:none;opacity:1}
-}
-.card-inner::before{
+.card::before{
     content:'';
     position:absolute;
     inset:-4px;
-    border-radius:32px;
+    border-radius:34px;
     background:linear-gradient(45deg,#ffd166,#ef476f,#ffd166);
     z-index:-1;
-    animation:borderGlow 8s linear infinite;
+    animation:glow 10s linear infinite;
 }
-@keyframes borderGlow{
+@keyframes glow{
     0%{filter:hue-rotate(0deg)}
     100%{filter:hue-rotate(360deg)}
 }
-
-.card-title{
+.title{
     font-family:'Great Vibes',cursive;
-    font-size:56px;
+    font-size:58px;
     color:#c1121f;
     margin-bottom:20px;
 }
-.card-name{
+.name{
     font-family:'Playfair Display',serif;
     font-size:22px;
     margin-bottom:25px;
 }
-.card-message{
+.message{
     font-size:16px;
     line-height:1.9;
     white-space:pre-line;
-    min-height:180px;
-}
-
-/* ================= MOBILE ================= */
-@media(max-width:600px){
-    .card-inner{width:90%;padding:40px}
-    .card-title{font-size:44px}
+    min-height:200px;
 }
 </style>
 </head>
@@ -147,168 +111,201 @@ canvas{
 
 <canvas id="canvas"></canvas>
 
-<div id="santa">🎅🦌🦌</div>
-
 <div id="gift">
     <div class="box"></div>
 </div>
 
 <div id="card">
-    <div class="card-inner">
-        <div class="card-title">Merry Christmas</div>
-        <div class="card-name">Gửi Nguyễn Phạm Lâm Vy</div>
-        <div id="message" class="card-message"></div>
+    <div class="card">
+        <div class="title">Merry Christmas</div>
+        <div class="name">Gửi Nguyễn Phạm Lâm Vy</div>
+        <div id="text" class="message"></div>
     </div>
 </div>
 
 <audio id="music" loop>
-  <source src="https://cdn.pixabay.com/audio/2022/11/22/audio_1b1e6c8c1f.mp3">
+<source src="https://cdn.pixabay.com/audio/2022/11/22/audio_1b1e6c8c1f.mp3">
 </audio>
+
 <script>
-/* ================= CANVAS ================= */
+/* ================= CORE ================= */
 const canvas=document.getElementById('canvas');
 const ctx=canvas.getContext('2d');
 function resize(){
-  canvas.width=innerWidth;
-  canvas.height=innerHeight;
+    canvas.width=innerWidth;
+    canvas.height=innerHeight;
 }
 resize();
 addEventListener('resize',resize);
 
-/* ================= SNOW 3 LAYERS ================= */
+/* ================= SNOW ================= */
 const snow=[];
-for(let i=0;i<350;i++){
-  snow.push({
-    x:Math.random()*canvas.width,
-    y:Math.random()*canvas.height,
-    r:Math.random()*3+1,
-    s:Math.random()*1.5+0.5,
-    d:Math.random()*Math.PI*2
-  });
+for(let i=0;i<500;i++){
+    snow.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        z:Math.random(),
+        r:Math.random()*3+1,
+        s:Math.random()*1.5+0.3
+    });
 }
+
+/* ================= TREE DATA (3D FAKE) ================= */
+let grow=0;
+const layers=[];
+for(let i=0;i<140;i++){
+    layers.push({
+        y:i,
+        depth:Math.random()*0.6+0.4,
+        offset:Math.random()*Math.PI*2
+    });
+}
+
+/* ================= DRAW ================= */
 function drawSnow(){
-  ctx.fillStyle='white';
-  snow.forEach(s=>{
-    ctx.beginPath();
-    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctx.fill();
-    s.y+=s.s;
-    s.x+=Math.sin(s.d)*0.3;
-    s.d+=0.01;
-    if(s.y>canvas.height){
-      s.y=-10;
-      s.x=Math.random()*canvas.width;
+    snow.forEach(s=>{
+        const speed=s.s*(0.5+s.z);
+        s.y+=speed;
+        s.x+=Math.sin(s.y*0.01)*0.3;
+        ctx.fillStyle=`rgba(255,255,255,${0.3+s.z})`;
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r*(0.5+s.z),0,Math.PI*2);
+        ctx.fill();
+        if(s.y>canvas.height){
+            s.y=-10;
+            s.x=Math.random()*canvas.width;
+        }
+    });
+}
+
+function drawTree3D(){
+    const cx=canvas.width/2;
+    const base=canvas.height*0.78;
+    ctx.save();
+    ctx.lineCap='round';
+    for(let i=0;i<grow;i++){
+        const l=layers[i];
+        const y=base-l.y*4;
+        const width=(220-l.y*1.4)*l.depth;
+        const sway=Math.sin(Date.now()*0.001+l.offset)*6*l.depth;
+
+        ctx.strokeStyle=`hsl(${110-l.y*0.4},45%,${25+l.depth*20}%)`;
+        ctx.lineWidth=2*l.depth;
+
+        ctx.beginPath();
+        ctx.moveTo(cx,y);
+        ctx.quadraticCurveTo(
+            cx-width/2+sway,
+            y+8,
+            cx-width+sway,
+            y
+        );
+        ctx.moveTo(cx,y);
+        ctx.quadraticCurveTo(
+            cx+width/2+sway,
+            y+8,
+            cx+width+sway,
+            y
+        );
+        ctx.stroke();
     }
-  });
-}
 
-/* ================= TREE ================= */
-let treeStep=0;
-function drawTree(){
-  const cx=canvas.width/2;
-  const base=canvas.height*0.75;
+    ctx.fillStyle='#5a3a1a';
+    ctx.fillRect(cx-12,base,24,40);
 
-  ctx.save();
-  ctx.strokeStyle='#1b5e20';
-  ctx.lineWidth=3;
-  ctx.lineCap='round';
-
-  ctx.beginPath();
-  for(let i=0;i<treeStep;i++){
-    const y=base-i*4;
-    const spread=200-i*1.3;
-    ctx.moveTo(cx,y);
-    ctx.quadraticCurveTo(cx-spread/2,y+8,cx-spread,y);
-    ctx.moveTo(cx,y);
-    ctx.quadraticCurveTo(cx+spread/2,y+8,cx+spread,y);
-  }
-  ctx.stroke();
-
-  ctx.fillStyle='#5a3a1a';
-  ctx.fillRect(cx-12,base,24,40);
-
-  const glow=Math.sin(Date.now()/400)*12+20;
-  ctx.shadowColor='#ffd166';
-  ctx.shadowBlur=glow;
-  ctx.fillStyle='#ffd166';
-  ctx.beginPath();
-  ctx.arc(cx,base-treeStep*4-18,9,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.restore();
-  if(treeStep<130) treeStep+=0.5;
-}
-
-/* ================= LIGHTS ================= */
-function drawLights(){
-  const cx=canvas.width/2;
-  const base=canvas.height*0.75;
-  const t=Date.now()/700;
-  for(let i=0;i<45;i++){
-    const y=base-i*7;
-    const spread=200-i*1.4;
-    const x=cx-spread/2+Math.sin(i)*spread*0.5;
-    ctx.fillStyle=`hsl(${(i*30+t*60)%360},100%,60%)`;
+    const glow=Math.sin(Date.now()*0.002)*15+25;
+    ctx.shadowColor='#ffd166';
+    ctx.shadowBlur=glow;
+    ctx.fillStyle='#ffd166';
     ctx.beginPath();
-    ctx.arc(x,y,3+Math.sin(t+i),0,Math.PI*2);
+    ctx.arc(cx,base-grow*4-18,10,0,Math.PI*2);
     ctx.fill();
-  }
+    ctx.restore();
+
+    if(grow<layers.length) grow+=0.5;
 }
 
-/* ================= ANIMATE ================= */
 function animate(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  drawSnow();
-  drawTree();
-  drawLights();
-  requestAnimationFrame(animate);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    drawSnow();
+    drawTree3D();
+    requestAnimationFrame(animate);
 }
 animate();
+</script>
+<script>
+/* ================= LIGHTS ================= */
+function drawLights(){
+    const cx=canvas.width/2;
+    const base=canvas.height*0.78;
+    const t=Date.now()*0.002;
+    for(let i=0;i<60;i++){
+        const y=base-i*6;
+        const spread=220-i*1.5;
+        const x=cx-spread/2+Math.sin(i*0.7)*spread*0.4;
+        ctx.fillStyle=`hsl(${(i*40+t*80)%360},100%,60%)`;
+        ctx.beginPath();
+        ctx.arc(x,y,3+Math.sin(t+i),0,Math.PI*2);
+        ctx.fill();
+    }
+}
 
-/* ================= CARD & TEXT ================= */
+/* override animate */
+const oldAnimate=animate;
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    drawSnow();
+    drawTree3D();
+    drawLights();
+    requestAnimationFrame(animate);
+}
+
+/* ================= CARD ================= */
 const gift=document.getElementById('gift');
 const card=document.getElementById('card');
-const msgEl=document.getElementById('message');
+const textEl=document.getElementById('text');
 const music=document.getElementById('music');
 
-const text=
-`Giáng Sinh lại về,
-mang theo những ánh đèn dịu dàng
-và không khí ấm áp rất riêng.
+const message=`Giáng Sinh lại về,
+mang theo ánh đèn ấm áp
+và những khoảnh khắc rất riêng.
 
 Chúc Lâm Vy
-một mùa Noel thật bình yên,
-luôn mỉm cười thật nhiều,
+một mùa Noel thật an yên,
+luôn mỉm cười dịu dàng,
 và gặp thật nhiều điều tốt đẹp.
 
 Mong rằng
-những khoảnh khắc nhỏ
+mỗi ngày trôi qua
 đều đủ ấm để nhớ,
 đủ vui để mỉm cười.
 
 Merry Christmas 🎄✨`;
 
 gift.onclick=()=>{
-  gift.style.display='none';
-  card.classList.add('show');
-  music.volume=0;
-  music.play();
-  let v=0;
-  const fade=setInterval(()=>{
-    if(v<0.6){v+=0.01;music.volume=v}
-    else clearInterval(fade);
-  },200);
-  typeText();
+    gift.style.display='none';
+    card.classList.add('show');
+    music.volume=0;
+    music.play();
+    let v=0;
+    const fade=setInterval(()=>{
+        if(v<0.6){v+=0.01;music.volume=v}else clearInterval(fade);
+    },200);
+    typeWriter();
 };
 
-function typeText(){
-  let i=0;
-  const timer=setInterval(()=>{
-    msgEl.textContent+=text[i];
-    if(text[i]==','||text[i]=='.') clearInterval(timer),setTimeout(typeText,300);
-    i++;
-    if(i>=text.length) clearInterval(timer);
-  },60);
+function typeWriter(){
+    let i=0;
+    function write(){
+        if(i>=message.length) return;
+        textEl.textContent+=message[i];
+        let delay=55;
+        if(message[i]==','||message[i]=='.') delay=350;
+        if(message[i]=='\n') delay=500;
+        i++;
+        setTimeout(write,delay);
+    }
+    write();
 }
 </script>
 
